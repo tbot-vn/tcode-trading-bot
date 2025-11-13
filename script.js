@@ -1,34 +1,30 @@
-// script.js
+// Tính giá
+document.getElementById('days').addEventListener('change', function() {
+  const days = parseInt(this.value);
+  const pricePerDay = 40 / 30; // Giá/30 ngày
+  const totalUSD = pricePerDay * days;
+  document.getElementById('totalUSD').textContent = `Tổng: ${totalUSD.toFixed(0)} USD`;
+  const vndRate = 25000; // Tỷ giá cố định
+  document.getElementById('totalVND').textContent = `Tổng: ${(totalUSD * vndRate).toLocaleString()} VND`;
+});
 
-// Dữ liệu Bot (Thay thế nội dung thực tế của bạn)
-const botData = {
-    SoloZenging: {
-        description: "Đặc điểm: Giao dịch theo xu hướng dài hạn. Điểm mạnh: Lợi nhuận ổn định, ít rủi ro. Điểm yếu: Cần vốn lớn. Vốn tối thiểu: 500 USD.",
-        fileLink: "https://docs.google.com/link_solo_zenging", // Thay bằng link File Hướng Dẫn thực tế
-        videoLink: "https://www.youtube.com/link_video_solo_zenging" // Thay bằng link Video Hướng Dẫn thực tế
-    },
-    SoloMarket: {
-        description: "Đặc điểm: Giao dịch lướt sóng, kiếm lời nhanh. Điểm mạnh: Lợi nhuận cao trong thời gian ngắn. Điểm yếu: Rủi ro cao, cần theo dõi. Vốn tối thiểu: 300 USD.",
-        fileLink: "https://docs.google.com/link_solo_market",
-        videoLink: "https://www.youtube.com/link_video_solo_market"
-    },
-    B9_Scalper: {
-        description: "Đặc điểm: Giao dịch Scalping cực nhanh. Điểm mạnh: Tối ưu hóa trên các cặp tiền nhỏ. Điểm yếu: Nhạy cảm với Spread. Vốn tối thiểu: 200 USD.",
-        fileLink: "https://docs.google.com/link_b9_scalper",
-        videoLink: "https://www.youtube.com/link_video_b9_scalper"
-    }
-};
+// Xử lý thanh toán
+document.getElementById('paymentMethod').addEventListener('change', function() {
+  const method = this.value;
+  const qrDiv = document.getElementById('qrSection');
+  if (method === 'MoMo (VND)') {
+    // Generate QR MoMo (dùng API MoMo hoặc qrcode lib)
+    const qrData = `momo://pay?amount=${totalVND}&note=Aura EA`; // Dữ liệu QR
+    qrDiv.innerHTML = ''; // Clear
+    new QRCode(qrDiv, qrData); // Sử dụng thư viện QRCode
+  } else {
+    // Hiển thị USDT address tĩnh
+    qrDiv.innerHTML = '<p>USDT TRC20: T9xLm... (copy button)</p>';
+  }
+});
 
-// Thông tin Thanh toán Tĩnh (Thay thế thông tin của bạn)
-const paymentDetails = {
-    QR: {
-        method: "QR Code (Ngân hàng/MoMo)",
-        info: '<img src="link_den_hinh_QR_cua_ban.png" alt="Mã QR Thanh Toán"><p>Vui lòng quét mã và chuyển khoản <strong>chính xác số tiền</strong> cùng nội dung: <strong>[ID MT5 CỦA BẠN]</strong></p>'
-    },
-    USDT: {
-        method: "USDT TRC20",
-        info: '<p>Địa chỉ Ví USDT (TRC20): <strong><span id="usdt-address">TG6XtBaVVdnHDKnRLzUa4HNUd9bPx7Xuow</span></strong></p><p>Số tiền: <span id="usdt-amount"></span> (chuyển chính xác)</p><p><strong>LƯU Ý:</strong> Chuyển khoản đúng mạng lưới TRC20.</p>'
-    }
-};
-
-const TELEGRAM_USERNAME = "@tCode_T95"; // Thay bằng @username Telegram của bạn
+// Copy address
+function copyAddress() {
+  navigator.clipboard.writeText('T9xLm...'); // Địa chỉ ví
+  alert('Đã copy!');
+}
