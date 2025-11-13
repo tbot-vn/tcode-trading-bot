@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TCode-Trading Hệ Bot</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>TCode-Trading Hệ Bot</h1>
+        <div class="language-switcher">
+            <button onclick="changeLanguage('vi')">Tiếng Việt</button>
+            <button onclick="changeLanguage('en')">English</button>
+        </div>
+    </header>
+
+    <main>
+        <section id="gioi-thieu-bot">
+            <h2>🤖 Giới Thiệu Bot</h2>
+            <label for="bot-select">Chọn Bot:</label>
+            <select id="bot-select" onchange="displayBotInfo()">
+                <option value="SoloZenging">SoloZenging</option>
+                <option value="SoloMarket">SoloMarket</option>
+                <option value="B9_Scalper">B9_Scalper</option>
+            </select>
+
+            <div id="bot-info" class="info-box">
+                <p>Chọn một Bot để xem thông tin chi tiết.</p>
+            </div>
+
+            <div class="buttons-group">
+                <a id="guide-file-link" href="#" target="_blank" class="button">📄 File Hướng Dẫn</a>
+                <a id="guide-video-link" href="#" target="_blank" class="button">▶️ Video Hướng Dẫn</a>
+            </div>
+        </section>
+
+        <section id="thong-tin-thue">
+            <h2>💰 Đăng Ký Thuê Bot</h2>
+            <p class="highlight">Đăng ký tài khoản qua link: <strong>[Link Đăng Ký Của Bạn]</strong> để được sử dụng miễn phí</p>
+
+            <div class="form-group">
+                <label for="mt5-id">ID MT5 (MetaTrader 5):</label>
+                <input type="text" id="mt5-id" placeholder="Nhập ID MT5 của bạn" required>
+            </div>
+
+            <div class="form-group">
+                <label for="package-select">Chọn Gói Thuê:</label>
+                <select id="package-select" onchange="calculateTotal()">
+                    <option value="" data-price="0">-- Chọn gói --</option>
+                    <option value="Tuan" data-price="20">1 Tuần (20 USD)</option>
+                    <option value="1Thang" data-price="70">1 Tháng (70 USD)</option>
+                    <option value="3Thang" data-price="180">3 Tháng (180 USD)</option>
+                    <option value="6Thang" data-price="300">6 Tháng (300 USD)</option>
+                    <option value="1Nam" data-price="500">1 Năm (500 USD)</option>
+                    <option value="VinhVien" data-price="1000">Vĩnh Viễn (1000 USD)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="payment-method">Phương Thức Thanh Toán:</label>
+                <select id="payment-method" onchange="calculateTotal()">
+                    <option value="QR">QR Code (Ngân hàng/MoMo)</option>
+                    <option value="USDT">USDT TRC20</option>
+                </select>
+            </div>
+
+            <div class="form-group total-display">
+                <h3>Tổng Giá Trị Thanh Toán: <span id="total-price">0 USD</span></h3>
+            </div>
+
+            <div class="buttons-group">
+                <button id="create-order-btn" onclick="createOrder()">Tạo Đơn</button>
+                <button id="confirm-payment-btn" onclick="confirmPayment()" disabled>Xác Nhận Thanh Toán</button>
+            </div>
+        </section>
+
+        <section id="order-details-section" style="display: none;">
+            <h2>📝 Chi Tiết Đơn Hàng & Thanh Toán</h2>
+            <div id="order-summary" class="info-box"></div>
+            <div id="payment-info" class="info-box payment-box">
+                </div>
+        </section>
+
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
