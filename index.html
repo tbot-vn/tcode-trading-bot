@@ -1,32 +1,153 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Thuê Bot Aura EA</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> <!-- Nếu dùng Bootstrap -->
-  <link rel="stylesheet" href="style.css"> <!-- File CSS custom -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-localize="page_title">TCode-Trading Hệ Bot</title>
+    <!-- Tải Tailwind CSS cho thiết kế hiện đại và responsive -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Link đến file CSS riêng -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
-  <div class="container">
-    <h1>Thuê Bot — Mã định Aura EA</h1>
-    <form id="orderForm">
-      <!-- Dropdown chọn bot -->
-      <select id="botSelect"><option>Aura EA</option></select>
-      <!-- Input ngày -->
-      <input type="number" id="days" value="30" min="1">
-      <!-- Giá cố định -->
-      <input type="number" id="priceUSD" value="40" readonly>
-    </form>
-    <div id="totalUSD">Tổng: 40 USD</div>
-    <div id="totalVND">Tổng: 1.333.000 VND</div> <!-- Tính động -->
-    
-    <!-- Phần thanh toán -->
-    <select id="paymentMethod">
-      <option>MoMo (VND)</option>
-      <option>USDT TRC20</option>
-    </select>
-    <div id="qrSection"><!-- QR sẽ insert ở đây --></div>
-    <button onclick="copyAddress()">Copy</button>
-  </div>
+<body class="p-4 md:p-8">
+    <!-- HEADER & CHỌN NGÔN NGỮ -->
+    <header class="flex justify-between items-center mb-8 p-4 content-card rounded-xl">
+        <h1 class="text-3xl font-bold text-yellow-400" data-localize="header_title">TCode-Trading Hệ Bot</h1>
+        <div class="flex space-x-2">
+            <button id="lang_vn" class="px-3 py-1 text-sm rounded-lg bg-yellow-600 hover:bg-yellow-700 transition duration-150 text-white" data-localize="lang_vn">Tiếng Việt</button>
+            <button id="lang_en" class="px-3 py-1 text-sm rounded-lg bg-gray-600 hover:bg-gray-700 transition duration-150 text-white" data-localize="lang_en">English</button>
+        </div>
+    </header>
+    <main class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- CỘT 1 & 2: THÔNG TIN BOT & ĐẶT THUÊ -->
+        <div class="lg:col-span-2 space-y-8">
+           
+            <!-- PHẦN 1: THÔNG TIN TỔNG QUÁT VỀ BOT -->
+            <section id="bot_info_section" class="p-6 content-card rounded-xl">
+                <h2 class="text-2xl font-semibold mb-4 text-yellow-500" data-localize="section_info_title">Thông Tin Tổng Quát Về Bot</h2>
+               
+                <!-- Chọn Bot -->
+                <div class="mb-4">
+                    <label for="select_bot" class="block mb-2 font-medium" data-localize="select_bot">Chọn Bot:</label>
+                    <select id="select_bot" class="w-full p-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-yellow-500 focus:border-yellow-500 transition duration-150">
+                        <option value="SoloZenging">Solo Zenging</option>
+                        <option value="SoloMarket">Solo Market</option>
+                        <option value="B9_Scalper">B9 Scalper</option>
+                    </select>
+                </div>
+                <!-- Chi tiết Bot -->
+                <div class="space-y-3 p-4 bg-gray-800 rounded-lg border border-gray-700">
+                    <h3 id="bot_name" class="text-xl font-bold text-yellow-400">Solo Zenging</h3>
+                   
+                    <p><strong data-localize="bot_features">Đặc điểm của Bot:</strong> <span id="info_features">Chiến lược giao dịch độc lập, sử dụng dải Bollinger Bands kết hợp RSI để bắt đỉnh/đáy.</span></p>
+                    <p><strong data-localize="bot_strengths">Điểm mạnh:</strong> <span id="info_strengths">Tỷ lệ thắng cao, ít bị ảnh hưởng bởi tin tức mạnh.</span></p>
+                    <p><strong data-localize="bot_weaknesses">Điểm yếu:</strong> <span id="info_weaknesses">Dừng giao dịch khi thị trường có xu hướng mạnh, cần vốn tối thiểu để chịu rủi ro.</span></p>
+                    <p><strong data-localize="bot_min_capital">Mức vốn tối thiểu:</strong> <span id="info_min_capital" class="font-bold text-green-400">500 USD</span></p>
+                </div>
+               
+                <!-- Nút Hướng dẫn -->
+                <div class="flex space-x-4 mt-6">
+                    <a id="btn_guide_file_link" target="_blank" href="javascript:void(0)" onclick="window.open(GUIDE_LINKS.doc, '_blank')" class="flex-1 text-center py-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition duration-150 text-white font-semibold shadow-lg" data-localize="btn_guide_file">File Hướng Dẫn</a>
+                    <a id="btn_guide_video_link" target="_blank" href="javascript:void(0)" onclick="window.open(GUIDE_LINKS.video, '_blank')" class="flex-1 text-center py-2 rounded-lg bg-red-600 hover:bg-red-700 transition duration-150 text-white font-semibold shadow-lg" data-localize="btn_guide_video">Video Hướng Dẫn</a>
+                </div>
+            </section>
+           
+            <!-- PHẦN 2: THÔNG TIN THUÊ VÀ FORM -->
+            <section id="rental_form_section" class="p-6 content-card rounded-xl">
+                <h2 class="text-2xl font-semibold mb-4 text-yellow-500" data-localize="section_rental_title">Thông Tin Thuê Bot</h2>
+               
+                <!-- Highlight Đăng ký -->
+                <p class="text-lg font-bold text-center p-3 mb-6 bg-green-900/50 border border-green-700 rounded-lg">
+                    <span data-localize="highlight_register">Đăng ký tài khoản qua link:</span>
+                    <a href="javascript:void(0)" onclick="window.open(REGISTRATION_LINK, '_blank')" class="text-green-400 hover:underline break-all" id="registration_link_display">
+                        <script>document.write(REGISTRATION_LINK);</script>
+                    </a>
+                    để được sử dụng **MIỄN PHÍ**
+                </p>
+                <!-- Form Nhập liệu -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- ID MT5/MT4 -->
+                    <div>
+                        <label for="mt5_id" class="block mb-2 font-medium" data-localize="id_mt5_label">ID Tài khoản MT5/MT4:</label>
+                        <input type="text" id="mt5_id" placeholder="Nhập ID MT5/MT4 của bạn" class="w-full p-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-yellow-500 focus:border-yellow-500 transition duration-150">
+                    </div>
+                   
+                    <!-- Chọn Gói Thuê -->
+                    <div>
+                        <label for="rental_package" class="block mb-2 font-medium" data-localize="select_package_label">Chọn Gói Thuê:</label>
+                        <select id="rental_package" class="w-full p-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-yellow-500 focus:border-yellow-500 transition duration-150">
+                            <!-- Options sẽ được JS điền vào -->
+                        </select>
+                    </div>
+                   
+                    <!-- Chọn Phương Thức Thanh Toán -->
+                    <div>
+                        <label for="payment_method" class="block mb-2 font-medium" data-localize="select_payment_label">Chọn Phương Thức Thanh Toán:</label>
+                        <select id="payment_method" class="w-full p-2 rounded-lg bg-gray-800 border border-gray-700 text-white focus:ring-yellow-500 focus:border-yellow-500 transition duration-150">
+                            <option value="qr" data-localize="payment_qr">QR Code (VND)</option>
+                            <option value="usdt" data-localize="payment_usdt">USDT TRC20</option>
+                        </select>
+                    </div>
+                   
+                    <!-- Tổng Giá Trị -->
+                    <div class="flex flex-col justify-end">
+                        <p class="mb-2 font-medium" data-localize="total_price_label">Tổng Giá Trị Thanh Toán:</p>
+                        <p class="text-xl font-bold text-center p-2 rounded-lg bg-gray-700">
+                            <span id="total_price_vnd" class="text-red-400 mr-2">... VND</span>
+                            <span id="total_price_usd" class="text-green-400 text-base">(... USD)</span>
+                        </p>
+                    </div>
+                </div>
+                <!-- Nút Hành động -->
+                <div class="flex space-x-4 mt-6">
+                    <button id="btn_generate_order" class="flex-1 py-3 rounded-lg bg-yellow-600 hover:bg-yellow-700 transition duration-150 text-white font-bold text-lg shadow-lg" data-localize="btn_generate_order">Tạo Đơn</button>
+                    <button id="btn_confirm_payment" class="flex-1 py-3 rounded-lg bg-green-600 hover:bg-green-700 transition duration-150 text-white font-bold text-lg shadow-lg" data-localize="btn_confirm_payment">Xác nhận Thanh Toán</button>
+                </div>
+            </section>
+        </div>
+        <!-- CỘT 3: CHI TIẾT ĐƠN HÀNG VÀ THANH TOÁN (Khối ẩn) -->
+        <section id="order_details_block" class="lg:col-span-1 p-6 content-card rounded-xl h-fit hidden sticky top-4">
+            <h2 class="text-2xl font-semibold mb-6 text-yellow-500" data-localize="order_details_title">Chi Tiết Đơn Hàng & Thanh Toán</h2>
+           
+            <!-- Chi tiết Đơn hàng -->
+            <div class="space-y-2 mb-6 text-sm">
+                <p class="text-white font-bold text-lg">ID Đơn hàng: <span id="order_id_display" class="text-yellow-400">N/A</span></p>
+                <div class="h-px bg-gray-700 my-2"></div>
+                <p><strong data-localize="order_bot">Bot:</strong> <span id="order_bot_display" class="float-right">N/A</span></p>
+                <p><strong data-localize="order_package">Gói:</strong> <span id="order_package_display" class="float-right">N/A</span></p>
+                <p><strong data-localize="order_id_mt5">ID MT5:</strong> <span id="order_id_mt5_display" class="float-right">N/A</span></p>
+                <p><strong data-localize="order_price_usd">Giá (USD):</strong> <span id="order_price_usd_display" class="float-right text-green-400 font-semibold">N/A</span></p>
+                <p><strong data-localize="order_price_vnd">Giá (VND):</strong> <span id="order_price_vnd_display" class="float-right text-red-400 font-semibold">N/A</span></p>
+                <p><strong data-localize="payment_method">Phương Thức:</strong> <span id="order_payment_method_display" class="float-right">N/A</span></p>
+            </div>
+            <!-- Thông tin Thanh toán -->
+            <div>
+                <p id="payment_info_text" class="text-center italic mb-4 text-sm"></p>
+                <!-- Thanh toán QR Code (Ẩn/Hiện bằng JS) -->
+                <div id="payment_qr_info" class="flex flex-col items-center">
+                    <!-- Placeholder QR Code. Vui lòng thay thế QR_MOMO_URL bằng QR Code tĩnh của bạn -->
+                    <img id="qr_code_image" src="javascript:void(0)" onload="this.src = QR_MOMO_URL" onerror="this.src='https://placehold.co/300x300/21262d/c9d1d9?text=QR+Error'" alt="QR Code Thanh Toán" class="w-48 h-48 rounded-lg border-4 border-white shadow-xl">
+                </div>
+                <!-- Thanh toán USDT (Ẩn/Hiện bằng JS) -->
+                <div id="payment_usdt_info" class="hidden">
+                    <div class="p-3 bg-gray-800 rounded-lg border border-gray-700 break-words">
+                        <p class="text-xs text-gray-400">USDT TRC20 Address:</p>
+                        <p id="usdt_address_display" class="font-mono text-base text-yellow-300"></p>
+                    </div>
+                    <button id="copy_usdt_btn" class="w-full mt-3 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 transition duration-150 text-white font-semibold shadow-md" data-localize="copy_usdt">Sao chép Địa chỉ Ví</button>
+                </div>
+            </div>
+           
+            <div class="mt-6 text-center">
+                <p class="text-xs text-gray-500">Lưu ý: Sau khi nhấn "Xác nhận Thanh Toán", bạn sẽ được chuyển đến Telegram chat với thông tin đơn hàng được điền sẵn.</p>
+            </div>
+        </section>
+    </main>
+   
+    <!-- Custom Message Box (Dùng thay thế cho alert/confirm) -->
+    <div id="custom_message_box" class="hidden"></div>
+
+    <!-- Link đến file JS riêng -->
+    <script src="script.js"></script>
 </body>
 </html>
